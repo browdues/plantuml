@@ -1,0 +1,41 @@
+@startuml app
+component "App.Run" {
+
+' package "data" {
+' [WorkflowRunController] as wfc
+' }
+package "data" {
+    [WorkflowRunController] as wfc
+    wfc ..> StateMachine
+    [NewStateMachine] ..> StateMachine
+    [NewStateMachine] ..> Marshaller
+    [NewStateMachine] ..> Publisher
+}
+
+wfc -d-> [XMLs]
+
+wfc ..> WorkflowRunner
+package "engine" {
+[InProcessWorkflowRunner] -up.> WorkflowRunner
+}
+
+
+
+wfc ..> Publisher
+
+wfc ..> Marshaller
+
+wfc ..> AssetPathResolver
+
+package "messaging" {
+    [StanPublisher] -up..> Publisher
+}
+
+package "serialization" {
+    [JSON] -up..> Marshaller
+}
+
+}
+
+
+@enduml
